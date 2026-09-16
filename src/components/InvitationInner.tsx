@@ -36,7 +36,7 @@ export default function InvitationInner() {
     <div className="invite-in bg-[#f3eee4]">
       <section className="relative flex min-h-dvh w-full flex-col overflow-x-clip">
       <Image
-        src="/images/inner-bg.png"
+        src="/images/inner-bg.webp"
         alt=""
         fill
         sizes="100vw"
@@ -53,7 +53,7 @@ export default function InvitationInner() {
           <div className="relative mx-auto w-[min(92vw,22.5rem)] sm:w-[min(84vw,30rem)] md:w-[34rem]">
             <div className="flower-bob pointer-events-none absolute top-[22%] -left-[22%] z-[2] w-[44%] max-w-[10.5rem] sm:-left-[24%] sm:max-w-[13rem]">
               <Image
-                src="/images/flower-spray.png"
+                src="/images/flower-spray.webp"
                 alt=""
                 width={720}
                 height={900}
@@ -62,7 +62,7 @@ export default function InvitationInner() {
             </div>
 
             <Image
-              src="/images/envelop-cover.png"
+              src="/images/envelop-cover.webp"
               alt=""
               width={1701}
               height={925}
@@ -74,7 +74,7 @@ export default function InvitationInner() {
                 <div className="overflow-hidden bg-[#fbfaf6] p-[3px] shadow-[0_12px_28px_rgba(20,40,70,0.22)] sm:p-1">
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
-                      src="/images/photo2.png"
+                      src="/images/photo2.webp"
                       alt="Shuhaib and Afreena together"
                       fill
                       sizes="(max-width: 768px) 38vw, 200px"
@@ -88,7 +88,7 @@ export default function InvitationInner() {
                 <div className="overflow-hidden bg-[#fbfaf6] p-[3px] shadow-[0_14px_30px_rgba(20,40,70,0.24)] sm:p-1">
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
-                      src="/images/photo1.png"
+                      src="/images/photo1.webp"
                       alt="Shuhaib and Afreena walking together"
                       fill
                       sizes="(max-width: 768px) 42vw, 220px"
@@ -100,7 +100,7 @@ export default function InvitationInner() {
             </div>
 
             <Image
-              src="/images/envelop.png"
+              src="/images/envelop.webp"
               alt=""
               width={1254}
               height={1254}
@@ -110,7 +110,7 @@ export default function InvitationInner() {
 
             <div className="flower-bob-alt pointer-events-none absolute top-[28%] -right-[12%] z-[6] w-[46%] max-w-[11rem] sm:-right-[14%] sm:max-w-[13.5rem]">
               <Image
-                src="/images/flower-spray.png"
+                src="/images/flower-spray.webp"
                 alt=""
                 width={720}
                 height={900}

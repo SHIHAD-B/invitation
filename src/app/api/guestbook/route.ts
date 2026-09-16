@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/mongodb";
+import { getDb, mongoFailReason } from "@/lib/mongodb";
 
 export type Wish = {
   id: string;
@@ -20,7 +20,10 @@ export async function GET() {
     return Response.json({ wishes: docs });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Could not load wishes." }, { status: 500 });
+    return Response.json(
+      { error: "Could not load wishes.", reason: mongoFailReason(error) },
+      { status: 500 },
+    );
   }
 }
 
@@ -56,6 +59,9 @@ export async function POST(request: Request) {
     return Response.json({ wish }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Could not save wish." }, { status: 500 });
+    return Response.json(
+      { error: "Could not save wish.", reason: mongoFailReason(error) },
+      { status: 500 },
+    );
   }
 }

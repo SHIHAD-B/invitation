@@ -139,7 +139,7 @@ export default function Guestbook() {
 
         <div className="flower-bob pointer-events-none absolute -bottom-2 -left-10 z-20 w-[58%] max-w-[10.5rem] sm:-bottom-4 sm:-left-14 sm:max-w-[16rem]">
           <Image
-            src="/images/flower-bl.png"
+            src="/images/flower-bl.webp"
             alt=""
             width={1122}
             height={1402}

@@ -1,5 +1,5 @@
 import { fieldErrorsFromZod, rsvpSchema, type RsvpRecord } from "@/lib/rsvp";
-import { getDb } from "@/lib/mongodb";
+import { getDb, mongoFailReason } from "@/lib/mongodb";
 import { getRsvps } from "@/lib/rsvp-data";
 
 export async function GET() {
@@ -8,7 +8,10 @@ export async function GET() {
     return Response.json({ rsvps });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Could not load RSVPs." }, { status: 500 });
+    return Response.json(
+      { error: "Could not load RSVPs.", reason: mongoFailReason(error) },
+      { status: 500 },
+    );
   }
 }
 
@@ -43,6 +46,9 @@ export async function POST(request: Request) {
     return Response.json({ rsvp }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Could not save RSVP." }, { status: 500 });
+    return Response.json(
+      { error: "Could not save RSVP.", reason: mongoFailReason(error) },
+      { status: 500 },
+    );
   }
 }

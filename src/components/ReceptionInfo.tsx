@@ -105,7 +105,7 @@ export default function ReceptionInfo() {
       <div className="relative mx-auto w-full max-w-[21.5rem] sm:max-w-xl md:max-w-2xl">
         <div className="flower-bob pointer-events-none absolute -top-8 -left-8 z-20 w-[46%] max-w-[8.5rem] sm:-top-10 sm:-left-14 sm:max-w-[13rem]">
           <Image
-            src="/images/flower-left.png"
+            src="/images/flower-left.webp"
             alt=""
             width={720}
             height={900}
@@ -114,7 +114,7 @@ export default function ReceptionInfo() {
         </div>
         <div className="flower-bob-alt pointer-events-none absolute top-[28%] -left-10 z-20 w-[42%] max-w-[7.75rem] sm:-left-16 sm:max-w-[12.5rem]">
           <Image
-            src="/images/flower-bl.png"
+            src="/images/flower-bl.webp"
             alt=""
             width={1122}
             height={1402}
@@ -123,7 +123,7 @@ export default function ReceptionInfo() {
         </div>
         <div className="flower-bob pointer-events-none absolute -bottom-6 -right-8 z-20 w-[48%] max-w-[9rem] sm:-bottom-8 sm:-right-14 sm:max-w-[14rem]">
           <Image
-            src="/images/flower-br.png"
+            src="/images/flower-br.webp"
             alt=""
             width={1122}
             height={1402}

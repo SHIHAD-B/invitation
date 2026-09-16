@@ -4,9 +4,17 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import FallingFlowers from "@/components/FallingFlowers";
 import InvitationInner from "@/components/InvitationInner";
-import MusicButton from "@/components/MusicButton";
 
 type Phase = "idle" | "opening" | "opened";
+
+const INNER_IMAGES = [
+  "/images/inner-bg.webp",
+  "/images/envelop.webp",
+  "/images/envelop-cover.webp",
+  "/images/flower-spray.webp",
+  "/images/photo1.webp",
+  "/images/photo2.webp",
+] as const;
 
 function HeartIcon() {
   return (
@@ -37,28 +45,28 @@ function BloomBurst() {
     <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
       <div className="bloom-glow absolute left-1/2 top-1/2 size-[130%] rounded-full bg-[#8aa4c8]/35 blur-3xl" />
       <Image
-        src="/images/flower-left.png"
+        src="/images/flower-left.webp"
         alt=""
         width={720}
         height={900}
         className="bloom-left absolute -left-[38%] -top-[18%] h-auto w-[92%] max-w-none"
       />
       <Image
-        src="/images/flower-right.png"
+        src="/images/flower-right.webp"
         alt=""
         width={720}
         height={900}
         className="bloom-right absolute -right-[38%] -top-[18%] h-auto w-[92%] max-w-none"
       />
       <Image
-        src="/images/flower-left.png"
+        src="/images/flower-left.webp"
         alt=""
         width={720}
         height={900}
         className="bloom-left absolute -left-[22%] top-[8%] h-auto w-[70%] max-w-none opacity-80"
       />
       <Image
-        src="/images/flower-right.png"
+        src="/images/flower-right.webp"
         alt=""
         width={720}
         height={900}
@@ -70,6 +78,16 @@ function BloomBurst() {
 
 export default function InvitationCover() {
   const [phase, setPhase] = useState<Phase>("idle");
+
+  useEffect(() => {
+    for (const href of INNER_IMAGES) {
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.as = "image";
+      link.href = href;
+      document.head.appendChild(link);
+    }
+  }, []);
 
   useEffect(() => {
     if (phase !== "opening") {
@@ -105,10 +123,7 @@ export default function InvitationCover() {
       {phase === "opened" ? null : <FallingFlowers />}
 
       {phase === "opened" ? (
-        <>
-          <InvitationInner />
-          <MusicButton />
-        </>
+        <InvitationInner />
       ) : (
         <div className="relative z-10 w-full max-w-[23.5rem] sm:max-w-xl md:max-w-[46rem] lg:max-w-[52rem]">
           {opening ? <BloomBurst /> : null}
@@ -117,7 +132,7 @@ export default function InvitationCover() {
             className={`relative z-10 rounded-[1.5rem] bg-cream px-5 py-8 text-center shadow-[0_18px_50px_rgba(0,0,0,0.28)] sm:px-10 sm:py-10 md:px-16 md:py-12 ${opening ? "card-open" : ""}`}
           >
             <Image
-              src="/images/flower-left.png"
+              src="/images/flower-left.webp"
               alt=""
               width={720}
               height={900}
@@ -127,7 +142,7 @@ export default function InvitationCover() {
               className="pointer-events-none absolute -left-1 top-3 z-[1] h-auto w-[42%] max-w-[10.5rem] select-none sm:-left-2 sm:top-4 sm:max-w-[13.5rem] md:-left-3 md:top-5 md:w-[36%] md:max-w-[16.5rem]"
             />
             <Image
-              src="/images/flower-right.png"
+              src="/images/flower-right.webp"
               alt=""
               width={720}
               height={900}

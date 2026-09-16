@@ -84,7 +84,7 @@ export default function CeremonyInfo() {
 
           <div className="flower-bob pointer-events-none absolute -bottom-2 -left-10 z-20 w-[58%] max-w-[10.5rem] sm:-bottom-8 sm:-left-14 sm:w-[52%] sm:max-w-[16rem] md:-left-20 md:max-w-[18.5rem]">
             <Image
-              src="/images/flower-bl.png"
+              src="/images/flower-bl.webp"
               alt=""
               width={1122}
               height={1402}
@@ -93,7 +93,7 @@ export default function CeremonyInfo() {
           </div>
           <div className="flower-bob-alt pointer-events-none absolute -bottom-2 -right-10 z-20 w-[58%] max-w-[10.5rem] sm:-bottom-4 sm:-right-14 sm:w-[52%] sm:max-w-[16rem] md:-right-20 md:max-w-[18.5rem]">
             <Image
-              src="/images/flower-br.png"
+              src="/images/flower-br.webp"
               alt=""
               width={1122}
               height={1402}
