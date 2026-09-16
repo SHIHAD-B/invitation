@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Shuhaib Afreena//Wedding Reception//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:reception-20270103@shuhaib-afreena
+DTSTAMP:20260916T000000Z
+DTSTART:20270103T073000Z
+DTEND:20270103T123000Z
+SUMMARY:Shuhaib Babu & Afreena K.S Reception
+DESCRIPTION:The reception will take place on Sunday, 3 January 2027 at 11:30 AM.
+LOCATION:Aiswarya Auditorium, Thottupalam, Kinassery(po), Palakkad
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

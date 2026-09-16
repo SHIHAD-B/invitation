@@ -1,26 +1,323 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b2748;
+  --foreground: #f6f1e6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-navy: #0b2748;
+  --color-navy-deep: #07182f;
+  --color-cream: #f6f1e6;
+  --color-ink: #1a365d;
+  --color-gold: #d4c49a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-playfair);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.paper-bg {
+  background-color: #f3eee6;
+  background-image: url("/images/paper.png");
+  background-repeat: repeat;
+  background-size: 420px;
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: var(--petal-opacity, 0.9);
+  }
+  90% {
+    opacity: var(--petal-opacity, 0.9);
+  }
+  100% {
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+
+@keyframes open-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 18px rgba(7, 24, 47, 0.28),
+      0 0 0 0 rgba(212, 196, 154, 0);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow:
+      0 8px 22px rgba(7, 24, 47, 0.2),
+      0 0 18px 4px rgba(232, 214, 163, 0.55),
+      0 0 36px 10px rgba(255, 255, 255, 0.14);
+    filter: brightness(1.22);
+  }
+}
+
+@keyframes open-shine {
+  0% {
+    transform: translateX(-160%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(280%) skewX(-18deg);
+  }
+}
+
+.petal {
+  animation: petal-fall var(--duration) linear var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+.open-flash {
+  animation: open-pulse 1.7s ease-in-out infinite;
+}
+
+.open-flash .shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.48),
+    transparent
+  );
+  animation: open-shine 2.4s ease-in-out infinite;
+}
+
+@keyframes heart-exit {
+  to {
+    opacity: 0;
+    transform: scale(0.45);
+  }
+}
+
+@keyframes bloom-burst-left {
+  0% {
+    opacity: 0;
+    transform: translate3d(18%, 8%, 0) scale(0.62);
+    filter: blur(18px);
+  }
+  40% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate3d(-8%, -4%, 0) scale(1.38);
+    filter: blur(10px);
+  }
+}
+
+@keyframes bloom-burst-right {
+  0% {
+    opacity: 0;
+    transform: translate3d(-18%, 8%, 0) scale(0.62);
+    filter: blur(18px);
+  }
+  40% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate3d(8%, -4%, 0) scale(1.38);
+    filter: blur(10px);
+  }
+}
+
+@keyframes bloom-glow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.55);
+  }
+  45% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+}
+
+@keyframes card-open {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  28% {
+    filter: brightness(1.12);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: brightness(1.18);
+  }
+}
+
+@keyframes invite-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flower-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes flower-bob-alt {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes photo-emerge-left {
+  from {
+    opacity: 0;
+    transform: translateY(42%) rotate(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-9deg);
+  }
+}
+
+@keyframes photo-emerge-right {
+  from {
+    opacity: 0;
+    transform: translateY(48%) rotate(14deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(8deg);
+  }
+}
+
+@keyframes photo-bob-left {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-9deg);
+  }
+  50% {
+    transform: translateY(-11px) rotate(-7deg);
+  }
+}
+
+@keyframes photo-bob-right {
+  0%,
+  100% {
+    transform: translateY(0) rotate(8deg);
+  }
+  50% {
+    transform: translateY(-13px) rotate(10deg);
+  }
+}
+
+.heart-exit {
+  animation: heart-exit 0.45s ease-in forwards;
+}
+
+.bloom-left {
+  animation: bloom-burst-left 1.65s ease-out forwards;
+}
+
+.bloom-right {
+  animation: bloom-burst-right 1.65s ease-out forwards;
+}
+
+.bloom-glow {
+  animation: bloom-glow 1.7s ease-out forwards;
+}
+
+.card-open {
+  animation: card-open 2.35s ease-in forwards;
+}
+
+.invite-in {
+  animation: invite-in 0.9s ease-out both;
+}
+
+.flower-bob {
+  animation: flower-bob 3.4s ease-in-out infinite;
+}
+
+.flower-bob-alt {
+  animation: flower-bob-alt 4s ease-in-out 0.35s infinite;
+}
+
+.photo-left {
+  animation:
+    photo-emerge-left 1.2s ease-out both,
+    photo-bob-left 3.8s ease-in-out 1.2s infinite;
+  transform-origin: 50% 80%;
+}
+
+.photo-right {
+  animation:
+    photo-emerge-right 1.35s ease-out both,
+    photo-bob-right 4.2s ease-in-out 1.35s infinite;
+  transform-origin: 50% 80%;
+}
+
+.photo-clip {
+  clip-path: inset(-7rem -4rem 0 -4rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal,
+  .open-flash,
+  .open-flash .shine::before,
+  .heart-exit,
+  .bloom-left,
+  .bloom-right,
+  .bloom-glow,
+  .card-open,
+  .invite-in,
+  .flower-bob,
+  .flower-bob-alt,
+  .photo-left,
+  .photo-right {
+    animation: none;
+  }
+
+  .photo-left {
+    transform: rotate(-9deg);
+  }
+
+  .photo-right {
+    transform: rotate(8deg);
+  }
 }
