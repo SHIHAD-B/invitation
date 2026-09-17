@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FallingFlowers from "@/components/FallingFlowers";
 import InvitationInner from "@/components/InvitationInner";
+import MusicButton from "@/components/MusicButton";
+import { useIdleAutoScroll } from "@/lib/useIdleAutoScroll";
 
 type Phase = "idle" | "opening" | "opened";
 
@@ -78,6 +80,8 @@ function BloomBurst() {
 
 export default function InvitationCover() {
   const [phase, setPhase] = useState<Phase>("idle");
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  useIdleAutoScroll(phase === "opened", scrollerRef);
 
   useEffect(() => {
     for (const href of INNER_IMAGES) {
@@ -113,19 +117,19 @@ export default function InvitationCover() {
   const opening = phase === "opening";
 
   return (
-    <section
-      className={`relative isolate min-h-dvh flex-1 ${
-        phase === "opened"
-          ? "overflow-x-clip overflow-y-auto bg-[#f3eee4]"
-          : "flex items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_center,_#163a66_0%,_#0a2344_52%,_#07182f_100%)] px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6"
-      }`}
-    >
-      {phase === "opened" ? null : <FallingFlowers />}
-
+    <>
+      <MusicButton visible={phase === "opened"} shouldPlay={phase !== "idle"} />
       {phase === "opened" ? (
-        <InvitationInner />
+        <div
+          ref={scrollerRef}
+          className="fixed inset-0 z-10 overflow-x-hidden overflow-y-auto bg-[#f3eee4]"
+        >
+          <InvitationInner />
+        </div>
       ) : (
-        <div className="relative z-10 w-full max-w-[23.5rem] sm:max-w-xl md:max-w-[46rem] lg:max-w-[52rem]">
+        <section className="relative isolate flex min-h-dvh flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_center,_#163a66_0%,_#0a2344_52%,_#07182f_100%)] px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-6">
+          <FallingFlowers />
+          <div className="relative z-10 w-full max-w-[23.5rem] sm:max-w-xl md:max-w-[46rem] lg:max-w-[52rem]">
           {opening ? <BloomBurst /> : null}
 
           <article
@@ -193,8 +197,9 @@ export default function InvitationCover() {
               </button>
             </div>
           </article>
-        </div>
+          </div>
+        </section>
       )}
-    </section>
+    </>
   );
 }

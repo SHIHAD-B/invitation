@@ -296,6 +296,46 @@ body {
   clip-path: inset(-7rem -4rem 0 -4rem);
 }
 
+@keyframes eq-bar {
+  0%,
+  100% {
+    transform: scaleY(0.28);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 1.05rem;
+}
+
+.eq-bars span {
+  display: block;
+  width: 3px;
+  height: 100%;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center bottom;
+  animation: eq-bar 0.72s ease-in-out infinite;
+}
+
+.eq-bars span:nth-child(2) {
+  animation-delay: 0.14s;
+}
+
+.eq-bars span:nth-child(3) {
+  animation-delay: 0.28s;
+}
+
+.eq-bars span:nth-child(4) {
+  animation-delay: 0.08s;
+  height: 72%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .petal,
   .open-flash,
@@ -309,7 +349,8 @@ body {
   .flower-bob,
   .flower-bob-alt,
   .photo-left,
-  .photo-right {
+  .photo-right,
+  .eq-bars span {
     animation: none;
   }
 
