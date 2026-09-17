@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { createPortal } from "react-dom";
 
 const AUDIO_SRC = "/audio/IMG_9316.mp3";
-const VOLUME = 0.4;
+const VOLUME = 0.2;
+
+export type MusicHandle = {
+  startFromBeginning: () => void;
+};
 
 function MusicNoteIcon() {
   return (
@@ -25,79 +29,163 @@ function EqualizerIcon() {
   );
 }
 
+function getAudioContextClass(): typeof AudioContext | null {
+  if (typeof globalThis === "undefined") {
+    return null;
+  }
+  const globalWindow = globalThis as typeof globalThis & {
+    AudioContext?: typeof AudioContext;
+    webkitAudioContext?: typeof AudioContext;
+  };
+  return globalWindow.AudioContext ?? globalWindow.webkitAudioContext ?? null;
+}
+
 export default function MusicButton({
   visible,
-  shouldPlay,
+  ref,
 }: {
   visible: boolean;
-  shouldPlay: boolean;
+  ref?: Ref<MusicHandle>;
 }) {
   const [mounted, setMounted] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const contextRef = useRef<AudioContext | null>(null);
+  const gainRef = useRef<GainNode | null>(null);
+  const bufferRef = useRef<AudioBuffer | null>(null);
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const offsetRef = useRef(0);
+  const startedAtRef = useRef(0);
+  const stoppingRef = useRef(false);
+  const pendingStartRef = useRef(false);
+
+  function ensureGraph() {
+    const Context = getAudioContextClass();
+    if (!Context) {
+      return null;
+    }
+    if (!contextRef.current) {
+      const context = new Context();
+      const gain = context.createGain();
+      gain.gain.value = VOLUME;
+      gain.connect(context.destination);
+      contextRef.current = context;
+      gainRef.current = gain;
+    }
+    const context = contextRef.current;
+    const gain = gainRef.current;
+    if (context && gain) {
+      gain.gain.setValueAtTime(VOLUME, context.currentTime);
+    }
+    return context;
+  }
+
+  function stopSource() {
+    stoppingRef.current = true;
+    const source = sourceRef.current;
+    if (source) {
+      source.onended = null;
+      try {
+        source.stop();
+      } catch {
+        // Already stopped.
+      }
+      source.disconnect();
+      sourceRef.current = null;
+    }
+    stoppingRef.current = false;
+  }
+
+  function startSource(offset: number) {
+    const context = contextRef.current;
+    const gain = gainRef.current;
+    const buffer = bufferRef.current;
+    if (!context || !gain || !buffer) {
+      return;
+    }
+    stopSource();
+    gain.gain.setValueAtTime(VOLUME, context.currentTime);
+    const source = context.createBufferSource();
+    source.buffer = buffer;
+    source.connect(gain);
+    source.onended = () => {
+      if (stoppingRef.current) {
+        return;
+      }
+      offsetRef.current = 0;
+      sourceRef.current = null;
+      setPlaying(false);
+    };
+    const startOffset = Math.max(0, Math.min(offset, Math.max(buffer.duration - 0.05, 0)));
+    source.start(0, startOffset);
+    sourceRef.current = source;
+    startedAtRef.current = context.currentTime - startOffset;
+    offsetRef.current = startOffset;
+    setPlaying(true);
+  }
+
+  function startFromBeginning() {
+    const context = ensureGraph();
+    if (!context) {
+      return;
+    }
+    void context.resume();
+    offsetRef.current = 0;
+    if (bufferRef.current) {
+      startSource(0);
+      return;
+    }
+    pendingStartRef.current = true;
+  }
+
+  function toggle() {
+    const context = ensureGraph();
+    if (!context || !bufferRef.current) {
+      return;
+    }
+    void context.resume();
+    if (playing && sourceRef.current) {
+      offsetRef.current = Math.max(0, context.currentTime - startedAtRef.current);
+      stopSource();
+      setPlaying(false);
+      return;
+    }
+    startSource(offsetRef.current);
+  }
+
+  useImperativeHandle(ref, () => ({ startFromBeginning }));
 
   useEffect(() => {
     setMounted(true);
-    const audio = new Audio(AUDIO_SRC);
-    audio.preload = "auto";
-    audio.loop = false;
-    audio.volume = VOLUME;
-    audioRef.current = audio;
+    const context = ensureGraph();
+    if (!context) {
+      return;
+    }
 
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    const onEnded = () => setPlaying(false);
-    audio.addEventListener("play", onPlay);
-    audio.addEventListener("pause", onPause);
-    audio.addEventListener("ended", onEnded);
+    let cancelled = false;
+    void fetch(AUDIO_SRC)
+      .then((response) => response.arrayBuffer())
+      .then((data) => context.decodeAudioData(data.slice(0)))
+      .then((buffer) => {
+        if (cancelled) {
+          return;
+        }
+        bufferRef.current = buffer;
+        if (pendingStartRef.current) {
+          pendingStartRef.current = false;
+          startSource(0);
+        }
+      })
+      .catch(() => {});
 
     return () => {
-      audio.removeEventListener("play", onPlay);
-      audio.removeEventListener("pause", onPause);
-      audio.removeEventListener("ended", onEnded);
-      audio.pause();
-      audio.src = "";
-      audioRef.current = null;
+      cancelled = true;
+      stopSource();
+      void contextRef.current?.close();
+      contextRef.current = null;
+      gainRef.current = null;
+      bufferRef.current = null;
     };
   }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) {
-      return;
-    }
-    if (!shouldPlay) {
-      audio.pause();
-      audio.currentTime = 0;
-      return;
-    }
-    audio.volume = VOLUME;
-    audio.currentTime = 0;
-    void audio.play().catch(() => {
-      // Open is a user gesture; retry once if the element was still loading.
-      const retry = () => {
-        audio.currentTime = 0;
-        void audio.play().catch(() => {});
-      };
-      audio.addEventListener("canplay", retry, { once: true });
-    });
-  }, [shouldPlay]);
-
-  function toggle() {
-    const audio = audioRef.current;
-    if (!audio) {
-      return;
-    }
-    if (audio.paused) {
-      audio.volume = VOLUME;
-      if (audio.ended || audio.currentTime >= audio.duration - 0.05) {
-        audio.currentTime = 0;
-      }
-      void audio.play();
-    } else {
-      audio.pause();
-    }
-  }
 
   if (!mounted || !visible) {
     return null;

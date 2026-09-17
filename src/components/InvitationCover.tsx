@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import FallingFlowers from "@/components/FallingFlowers";
 import InvitationInner from "@/components/InvitationInner";
-import MusicButton from "@/components/MusicButton";
+import MusicButton, { type MusicHandle } from "@/components/MusicButton";
 import { useIdleAutoScroll } from "@/lib/useIdleAutoScroll";
 
 type Phase = "idle" | "opening" | "opened";
@@ -81,6 +81,7 @@ function BloomBurst() {
 export default function InvitationCover() {
   const [phase, setPhase] = useState<Phase>("idle");
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const musicRef = useRef<MusicHandle>(null);
   useIdleAutoScroll(phase === "opened", scrollerRef);
 
   useEffect(() => {
@@ -111,6 +112,7 @@ export default function InvitationCover() {
     if (phase !== "idle") {
       return;
     }
+    musicRef.current?.startFromBeginning();
     setPhase("opening");
   }
 
@@ -118,7 +120,7 @@ export default function InvitationCover() {
 
   return (
     <>
-      <MusicButton visible={phase === "opened"} shouldPlay={phase !== "idle"} />
+      <MusicButton ref={musicRef} visible={phase === "opened"} />
       {phase === "opened" ? (
         <div
           ref={scrollerRef}
