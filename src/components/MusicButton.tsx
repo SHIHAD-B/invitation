@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 const AUDIO_SRC = "/audio/IMG_9316.mp3";
-const VOLUME = 0.6;
+const VOLUME = 0.4;
 
 function MusicNoteIcon() {
   return (
