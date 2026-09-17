@@ -4,7 +4,7 @@ import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "reac
 import { createPortal } from "react-dom";
 
 const AUDIO_SRC = "/audio/IMG_9316.mp3";
-const VOLUME = 0.2;
+const VOLUME = 1;
 
 export type MusicHandle = {
   startFromBeginning: () => void;
