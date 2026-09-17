@@ -28,7 +28,7 @@ export function useIdleAutoScroll(
     }
 
     const scroller = scrollerRef.current;
-    if (!scroller) {
+    if (!(scroller instanceof HTMLDivElement)) {
       return;
     }
 
@@ -89,10 +89,11 @@ export function useIdleAutoScroll(
     function tick(now: number) {
       const delta = Math.min(50, now - last);
       last = now;
-      if (!paused) {
-        const max = scroller.scrollHeight - scroller.clientHeight;
+      const node = scrollerRef.current;
+      if (!paused && node) {
+        const max = node.scrollHeight - node.clientHeight;
         if (max > 4) {
-          scroller.scrollTop = Math.min(max, scroller.scrollTop + (PX_PER_SEC * delta) / 1000);
+          node.scrollTop = Math.min(max, node.scrollTop + (PX_PER_SEC * delta) / 1000);
         }
       }
       frame = window.requestAnimationFrame(tick);
